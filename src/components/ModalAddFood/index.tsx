@@ -1,30 +1,41 @@
 import { FormEvent, useRef, useState } from 'react';
 import { FiCheckSquare } from 'react-icons/fi';
+import { useOrders } from '../../hooks/useOrder';
 import Input from '../Input/index';
 import Modal from '../Modal';
 import { Form } from './styles';
 
 
+
+
 interface ModalAddFoodProps {
   isOpen: boolean;
   setIsOpen: () => void;
-  handleAddFood: () => void;
+
 }
 
 
-export function ModalAddFood({isOpen, handleAddFood, setIsOpen}: ModalAddFoodProps) {
+export function ModalAddFood({isOpen,  setIsOpen}: ModalAddFoodProps) {
   const [image, setImage] = useState('')
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [description, setDescription] = useState('')
   const formRef = useRef(null)
+  const {createOrder} = useOrders()
 
 
-  const handleSubmit = async (data: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
+    console.log(event);
 
-    handleAddFood();
+    createOrder({
+      
+      description,
+      image,
+      name,
+      price
+    })
+
     setIsOpen();
-    
     setImage('')
     setName('')
     setPrice('')
