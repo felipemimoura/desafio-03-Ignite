@@ -33,7 +33,7 @@ export const OrderProvider = ({children}: OrderProviderProps) => {
   useEffect(() => {
     api.get('/foods').then(response => setOrders(response.data))
 
-  },[orders])
+  },[])
 
 
   return(
