@@ -32,7 +32,9 @@ export const OrderProvider = ({children}: OrderProviderProps) => {
   }
   useEffect(() => {
     api.get('/foods').then(response => setOrders(response.data))
+
   },[orders])
+
 
   return(
     <OrderContext.Provider value={{orders,createOrder}} >{children}</OrderContext.Provider>
