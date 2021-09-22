@@ -1,69 +1,68 @@
-import { FormEvent, useRef, useState } from 'react';
+import React, { useRef, useCallback } from 'react';
+
 import { FiCheckSquare } from 'react-icons/fi';
-import { useOrders } from '../../hooks/useOrder';
-import Input from '../Input/index';
-import Modal from '../Modal';
+import { FormHandles } from '@unform/core';
 import { Form } from './styles';
+import Modal from '../Modal';
+import Input from '../Input';
 
-
-
-
-interface ModalAddFoodProps {
-  isOpen: boolean;
-  setIsOpen: () => void;
-
+interface IFoodPlate {
+  id: number;
+  name: string;
+  image: string;
+  price: string;
+  description: string;
+  available: boolean;
 }
 
+interface ICreateFoodData {
+  name: string;
+  image: string;
+  price: string;
+  description: string;
+}
 
-export function ModalAddFood({isOpen,  setIsOpen}: ModalAddFoodProps) {
-  const [image, setImage] = useState('')
-  const [name, setName] = useState('')
-  const [price, setPrice] = useState('')
-  const [description, setDescription] = useState('')
-  const formRef = useRef(null)
-  const {createOrder} = useOrders()
+interface IModalProps {
+  isOpen: boolean;
+  setIsOpen: () => void;
+  handleAddFood: (food: Omit<IFoodPlate, 'id' | 'available'>) => void;
+}
 
+const ModalAddFood: React.FC<IModalProps> = ({
+  isOpen,
+  setIsOpen,
+  handleAddFood,
+}) => {
+  const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = async (event: FormEvent) => {
-    console.log(event);
+  const handleSubmit = useCallback(
+    async (data: ICreateFoodData) => {
+      // TODO ADD A NEW FOOD AND CLOSE THE MODAL
+      handleAddFood(data);
+      setIsOpen();
+    },
+    [handleAddFood, setIsOpen],
+  );
 
-    createOrder({
-      
-      description,
-      image,
-      name,
-      price
-    })
+  return (
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Form ref={formRef} onSubmit={handleSubmit}>
+        <h1>Novo Prato</h1>
+        <Input name="image" placeholder="Cole o link aqui" />
 
-    setIsOpen();
-    setImage('')
-    setName('')
-    setPrice('')
-    setDescription('')
-  };
+        <Input name="name" placeholder="Ex: Moda Italiana" />
+        <Input name="price" placeholder="Ex: 19.90" />
 
-
-
-    return (
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <h1>Novo Prato</h1>
-          <Input name="image" placeholder="Cole o link aqui" value={image} onChange={(event) => setImage(event?.target.value)} />
-
-          <Input name="name" placeholder="Ex: Moda Italiana" value={name} onChange={(event) => setName(event?.target.value)} />
-          <Input name="price" placeholder="Ex: 19.90" value={price} onChange={(event) => setPrice(event?.target.value)}/>
-
-          <Input name="description" placeholder="Descrição" value={description} onChange={(event) => setDescription(event?.target.value)} />
-          <button type="submit" data-testid="add-food-button">
-            <p className="text">Adicionar Prato</p>
-            <div className="icon">
-              <FiCheckSquare size={24} />
-            </div>
-          </button>
-        </Form>
-      </Modal>
-    );
-  
+        <Input name="description" placeholder="Descrição" />
+        <button type="submit" data-testid="add-food-button">
+          <p className="text">Adicionar Prato</p>
+          <div className="icon">
+            <FiCheckSquare size={24} />
+          </div>
+        </button>
+      </Form>
+    </Modal>
+  );
 };
 
 export default ModalAddFood;

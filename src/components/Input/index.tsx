@@ -1,25 +1,20 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  InputHTMLAttributes,
-  SVGAttributes,
-} from 'react';
-
 import { useField } from '@unform/core';
-
+import React, {
+  InputHTMLAttributes, useCallback, useEffect,
+  useRef,
+  useState
+} from 'react';
+import { IconBaseProps } from 'react-icons/lib';
 import { Container } from './styles';
 
-interface Icon extends SVGAttributes<SVGElement> {
-  size: number;
-}
+
+
+
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement>{
   name: string;
-  icon?: Icon;
-  placeholder:string;
-  value: string | number;
+  icon?: React.ComponentType<IconBaseProps>;
+
 }
 
 const Input = ({name, icon: Icon, ...rest} : InputProps) => {
@@ -54,7 +49,7 @@ const Input = ({name, icon: Icon, ...rest} : InputProps) => {
 
   return (
     <Container isFilled={isFilled} isFocused={isFocused}>
-      {/* {Icon && <Icon  />} */}
+      {Icon && <Icon size={20} />}
 
       <input
         onFocus={handleInputFocus}
